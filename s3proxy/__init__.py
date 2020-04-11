@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from urlparse import urlparse
 
 import boto.s3.connection
 from flask import Flask, Response, redirect
@@ -19,18 +20,30 @@ if sys.version_info >= (2, 7, 9):
 
 
 class S3Proxy(object):
-    def __init__(self, bucket_name, path, key, secret, host, port):
+    def __init__(self, bucket_name, path, key, secret, host, port, endpoint_url):
         self.bucket_name = bucket_name
         self.path = path
         self.key = key
         self.secret = secret
         self.host = host
         self.port = port
+        self.endpoint_url = endpoint_url
 
         logging.basicConfig(
             format='%(asctime)s: %(name)s/%(levelname)-9s: %(message)s', level=logging.INFO)
 
-        self.s3 = boto.s3.connection.S3Connection(self.key, self.secret)
+        if self.endpoint_url is not None:
+            endpoint_host = self.endpoint_url
+            endpoint_port = 80
+            if self.endpoint_url.find(':') > -1:
+                endpoint_parsed = urlparse(self.endpoint_url)
+                endpoint_host = endpoint_parsed.scheme + '://' + endpoint_parsed.hostname
+                endpoint_port = endpoint_parsed.port
+            self.s3 = boto.s3.connection.S3Connection(aws_access_key_id= self.key,aws_secret_access_key= self.secret,host=endpoint_host,port=endpoint_port,validate_certs=False)
+            #print('endpoint host: {}, endpoint port: {}'.format(endpoint_host,endpoint_port))
+        else:
+            self.s3 = boto.s3.connection.S3Connection(self.key, self.secret)
+        #print('point to bucket {}'.format(self.bucket_name))
         self.bucket = self.s3.get_bucket(self.bucket_name)
 
         self.app = Flask(self.__class__.__name__)
@@ -41,6 +54,7 @@ class S3Proxy(object):
         self.handle = self.app.route('/<path:path>')(self.handle)
 
     def run(self):
+        print('now running flask app')
         return self.app.run(
             host=self.host,
             port=self.port,
@@ -126,6 +140,7 @@ def main():
         getenv('IAM_SECRET', None),
         getenv('BIND_HOST', '127.0.0.1'),
         int(getenv('BIND_PORT', 5000)),
+        getenv('S3_ENDPOINT_URL',''),
     ).run()
 
 
