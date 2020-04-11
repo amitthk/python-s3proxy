@@ -4,7 +4,6 @@
 #
 from setuptools import setup, find_packages
 
-
 # We use the version to construct the DOWNLOAD_URL.
 VERSION = '0.5.1'
 
@@ -41,7 +40,7 @@ setup(
         'boto',
         'Flask',
     ],
-    entry_points={'console_scripts': ['s3proxy = s3proxy:main']},
+    entry_points={'console_scripts': ['s3proxy = s3proxy.S3Proxy:main']},
     #tests_require=[
     #    'coverage',
     #    'mock',
