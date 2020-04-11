@@ -32,19 +32,22 @@ class S3Proxy(object):
         logging.basicConfig(
             format='%(asctime)s: %(name)s/%(levelname)-9s: %(message)s', level=logging.INFO)
 
-        if self.endpoint_url is not None:
+        if self.endpoint_url and self.endpoint_url.strip() :
             endpoint_host = self.endpoint_url
-            endpoint_port = 80
+            endpoint_port = 443
             if self.endpoint_url.find(':') > -1:
                 endpoint_parsed = urlparse(self.endpoint_url)
-                endpoint_host = endpoint_parsed.scheme + '://' + endpoint_parsed.hostname
+                endpoint_host = endpoint_parsed.hostname
                 endpoint_port = endpoint_parsed.port
-            self.s3 = boto.s3.connection.S3Connection(aws_access_key_id= self.key,aws_secret_access_key= self.secret,host=endpoint_host,port=endpoint_port,validate_certs=False)
-            #print('endpoint host: {}, endpoint port: {}'.format(endpoint_host,endpoint_port))
+            self.s3 = boto.s3.connection.S3Connection(aws_access_key_id= self.key,aws_secret_access_key= self.secret,host=endpoint_host,port=endpoint_port,calling_format=boto.s3.connection.OrdinaryCallingFormat(),is_secure=False)
+            print('boto.s3.connection.S3Connection(aws_access_key_id={},aws_secret_access_key={},host={},port={},is_secure={})'.format(self.key,self.secret,endpoint_host,endpoint_port,False))
         else:
-            self.s3 = boto.s3.connection.S3Connection(self.key, self.secret)
-        #print('point to bucket {}'.format(self.bucket_name))
+            self.s3 = boto.s3.connection.S3Connection(self.key,self.secret,is_secure=False)
+            print('boto.s3.connection.S3Connection({} {} {})'.format(self.key,secret,False))
+
+        print('{} {} {}'.format(self.key,self.secret,self.bucket_name))
         self.bucket = self.s3.get_bucket(self.bucket_name)
+        print('connected to bucket {}'.format(self.bucket_name))
 
         self.app = Flask(self.__class__.__name__)
         #self.app.debug = True

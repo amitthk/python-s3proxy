@@ -1,7 +1,7 @@
-export S3_BUCKET='mybucket'
+export S3_BUCKET=testbucket
 export S3_PREFIX=''
-export IAM_KEY='minioadmin'
-export IAM_SECRET='minioadmin'
+export IAM_KEY=minioadmin
+export IAM_SECRET=minioadmin
 export BIND_HOST=0.0.0.0
 export BIND_PORT=5000
-export S3_ENDPOINT_URL='http://localhost:9000'
+export S3_ENDPOINT_URL=http://localhost:9000
