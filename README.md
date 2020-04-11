@@ -6,15 +6,16 @@ Usage:
 
 <pre><code>
 #export variables according to your preference
-export S3_BUCKET=''
+export S3_BUCKET=testbucket
 export S3_PREFIX=''
-export IAM_KEY=''
-export IAM_SECRET=''
-export BIND_HOST=127.0.0.1
+export IAM_KEY=minioadmin
+export IAM_SECRET=minioadmin
+export BIND_HOST=0.0.0.0
 export BIND_PORT=5000
-export S3_ENDPOINT_URL=''
+export S3_ENDPOINT_URL=http://localhost:9000
 
 #install the module
+pip install -r requirements.pip
 pip install .
 
 #run
