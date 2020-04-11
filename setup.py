@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 VERSION = '0.5.1'
 
 # URL to the repository on Github.
-REPO_URL = 'https://github.com/reversefold/python-s3proxy'
+REPO_URL = 'https://github.com/amitthk/python-s3proxy'
 
 # Github will generate a tarball as long as you tag your releases, so don't
 # forget to tag!
@@ -18,10 +18,10 @@ DOWNLOAD_URL = ''.join((REPO_URL, '/tarball/release/', VERSION))
 setup(
     name='s3proxy',
     version=VERSION,
-    author='Justin Patrin',
-    author_email='papercrane@reversefold.com',
-    maintainer='Justin Patrin',
-    maintainer_email='papercrane@reversefold.com',
+    author='Amitthk',
+    author_email='e.amitthakur@gmail.com',
+    maintainer='Amitthk',
+    maintainer_email='e.amitthakur@gmail.com',
     description='HTTP Proxy for S3 buckets',
     long_description="""
         Exposes an HTTP endpoint for a given S3 bucket and prefix.
@@ -37,8 +37,15 @@ setup(
     license='License :: OSI Approved :: MIT License',
     packages=find_packages(),
     install_requires=[
-        'boto',
-        'Flask',
+        'boto==2.36.0',
+        'docutils==0.12',
+        'Flask==0.10.1',
+        'itsdangerous==0.24',
+        'Jinja2==2.7.3',
+        'MarkupSafe==0.23',
+        's3proxy==0.5.1',
+        'urllib3==1.25.8',
+        'Werkzeug==0.10.1'
     ],
     entry_points={'console_scripts': ['s3proxy = s3proxy.S3Proxy:main']},
     #tests_require=[
